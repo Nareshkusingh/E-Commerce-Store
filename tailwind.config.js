@@ -11,10 +11,10 @@ export default {
         surface: '#FFFFFF',
         border: '#E2E8F0',
         primary: {
-          DEFAULT: '#4F46E5',
-          hover: '#4338CA',
-          light: '#EEF2FF',
-          dark: '#3730A3',
+          DEFAULT: '#0F172A',
+          hover: '#1E293B',
+          light: '#F1F5F9',
+          dark: '#020617',
         },
         slate: {
           heading: '#0F172A',
@@ -24,9 +24,9 @@ export default {
         }
       },
       boxShadow: {
-        'soft': '0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)',
-        'soft-md': '0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04)',
-        'soft-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+        'soft': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03)',
+        'soft-md': '0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+        'soft-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.03)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

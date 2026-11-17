@@ -3,47 +3,47 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, Truck, RefreshCw, Headphones } from 'lucide-react';
 
 export default function Footer() {
-  const features = [
+  const assurances = [
     {
       icon: Truck,
       title: 'Free Express Shipping',
-      desc: 'On all domestic orders over $50',
+      desc: 'Complimentary on orders above $50',
     },
     {
       icon: RefreshCw,
-      title: '30-Day Easy Returns',
-      desc: 'Hassle-free exchanges & returns',
+      title: '30-Day Effortless Returns',
+      desc: 'Simple return & exchange service',
     },
     {
       icon: ShieldCheck,
-      title: 'Safe & Secure Payment',
-      desc: '256-bit encrypted checkout',
+      title: 'Secure Checkout',
+      desc: '256-bit encrypted transactions',
     },
     {
       icon: Headphones,
-      title: '24/7 Dedicated Support',
-      desc: 'Instant help whenever you need',
+      title: 'Customer Care',
+      desc: 'Dedicated support Monday to Friday',
     },
   ];
 
   return (
-    <footer className="mt-20 bg-white border-t border-border">
-      {/* Assurances Banner */}
+    <footer className="mt-24 bg-white border-t border-border">
+      {/* Assurances */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-b border-border">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feat) => {
-            const Icon = feat.icon;
+          {assurances.map((item) => {
+            const Icon = item.icon;
             return (
-              <div key={feat.title} className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 border border-border flex items-center justify-center flex-shrink-0 text-primary">
+              <div key={item.title} className="flex items-start gap-3.5">
+                <div className="w-10 h-10 rounded-lg bg-slate-50 border border-border flex items-center justify-center flex-shrink-0 text-slate-800">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-slate-heading">
-                    {feat.title}
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                    {item.title}
                   </h4>
-                  <p className="text-xs text-slate-muted mt-0.5">
-                    {feat.desc}
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {item.desc}
                   </p>
                 </div>
               </div>
@@ -54,101 +54,113 @@ export default function Footer() {
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm shadow-soft">
-                A
-              </div>
-              <span className="text-lg font-bold tracking-tight text-slate-heading">
-                AURA
-              </span>
-            </div>
-            <p className="text-xs text-slate-muted max-w-sm leading-relaxed">
-              Crafted for modern simplicity. Designed as a production-grade single page application showcasing minimalist aesthetics, seamless cart interactions, and high-performance state management.
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Col */}
+          <div className="space-y-3">
+            <span className="text-2xl font-black tracking-tight text-slate-900 font-sans">
+              Roy<span className="text-slate-400 font-normal">.</span>
+            </span>
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
+              Modern essentials crafted with precision. Focused on timeless design, enduring utility, and uncompromising quality.
             </p>
-            <div className="text-xs text-slate-400">
-              Powered by <span className="text-slate-600 font-medium">FakeStoreAPI</span> &middot; React 18+ &middot; Vite
-            </div>
           </div>
 
+          {/* Collections */}
           <div>
-            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-heading mb-3">
-              Categories
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
+              Collections
             </h5>
             <ul className="space-y-2 text-xs text-slate-600">
               <li>
-                <Link to="/?category=electronics" className="hover:text-primary transition-colors">
-                  Electronics
+                <Link to="/?category=electronics" className="hover:text-slate-900 transition-colors">
+                  Electronics & Tech
                 </Link>
               </li>
               <li>
-                <Link to="/?category=jewelery" className="hover:text-primary transition-colors">
-                  Jewelry & Accessories
+                <Link to="/?category=jewelery" className="hover:text-slate-900 transition-colors">
+                  Fine Jewelry & Silver
                 </Link>
               </li>
               <li>
-                <Link to="/?category=men's clothing" className="hover:text-primary transition-colors">
+                <Link to="/?category=men's clothing" className="hover:text-slate-900 transition-colors">
                   Men's Clothing
                 </Link>
               </li>
               <li>
-                <Link to="/?category=women's clothing" className="hover:text-primary transition-colors">
+                <Link to="/?category=women's clothing" className="hover:text-slate-900 transition-colors">
                   Women's Clothing
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Customer Support */}
           <div>
-            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-heading mb-3">
-              Quick Links
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
+              Customer Support
             </h5>
             <ul className="space-y-2 text-xs text-slate-600">
               <li>
-                <Link to="/" className="hover:text-primary transition-colors">
-                  Product Catalog
+                <Link to="/cart" className="hover:text-slate-900 transition-colors">
+                  Track Order & Bag
                 </Link>
               </li>
               <li>
-                <Link to="/cart" className="hover:text-primary transition-colors">
-                  Shopping Cart
-                </Link>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Shipping & Deliveries
+                </span>
               </li>
               <li>
-                <Link to="/login" className="hover:text-primary transition-colors">
-                  Account Sign In
-                </Link>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Exchange & Returns
+                </span>
               </li>
               <li>
-                <Link to="/checkout" className="hover:text-primary transition-colors">
-                  Checkout
-                </Link>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Help Center & FAQs
+                </span>
               </li>
             </ul>
           </div>
 
+          {/* About & Legal */}
           <div>
-            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-heading mb-3">
-              Demo Credentials
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">
+              About Roy
             </h5>
-            <div className="bg-slate-50 border border-border rounded-xl p-3 text-xs space-y-1 text-slate-600">
-              <p>User: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-mono">mor_2314</code></p>
-              <p>Pass: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-800 font-mono">83r5^_</code></p>
-              <p className="text-[11px] text-slate-400 pt-1">One-click auto-fill available on login page</p>
-            </div>
+            <ul className="space-y-2 text-xs text-slate-600">
+              <li>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  About Our Studio
+                </span>
+              </li>
+              <li>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Sustainability
+                </span>
+              </li>
+              <li>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Terms of Service
+                </span>
+              </li>
+              <li>
+                <span className="cursor-pointer hover:text-slate-900 transition-colors">
+                  Privacy Policy
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
 
+        {/* Clean copyright */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>&copy; {new Date().getFullYear()} AURA Minimalist Store. All rights reserved.</p>
-          <p className="flex items-center gap-4">
-            <span className="hover:text-slate-600 cursor-pointer">Privacy Policy</span>
-            <span>&middot;</span>
-            <span className="hover:text-slate-600 cursor-pointer">Terms of Service</span>
-            <span>&middot;</span>
-            <span className="hover:text-slate-600 cursor-pointer">Security</span>
-          </p>
+          <p>&copy; 2026 Roy. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+            <span className="hover:text-slate-600 cursor-pointer">Privacy</span>
+            <span className="hover:text-slate-600 cursor-pointer">Terms</span>
+            <span className="hover:text-slate-600 cursor-pointer">Contact</span>
+          </div>
         </div>
       </div>
     </footer>

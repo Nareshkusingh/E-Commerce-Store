@@ -1,130 +1,61 @@
-# AURA — Minimalist Modern E-Commerce SPA
+# Roy. — Modern Minimalist E-Commerce SPA
 
-A complete, production-ready E-Commerce Single Page Application (SPA) built with **React 18+**, **React Router DOM (v6/v7)**, **Context API**, and styled with **Tailwind CSS**.
-
----
-
-## 🚀 Features
-
-### 1. Minimalist Design Language
-- **Soft, Clean Palette:**
-  - Background: Crisp off-white (`#F8FAFC`)
-  - Cards & Surfaces: Pure white (`#FFFFFF`) with subtle soft shadows
-  - Primary Accent: Slate blue / Indigo muted (`#4F46E5`)
-  - Typography: Dark slate headings (`#0F172A`) and slate body text (`#475569`)
-  - Borders: Subtle neutral borders (`#E2E8F0`)
-- **Responsive Layout:** Mobile-first design with hamburger navigation, responsive product grids, and slide-out cart drawer.
-
-### 2. Architecture & Global State Management
-- **`AuthContext` (`src/context/AuthContext.jsx`):**
-  - Manages authentication state, user profile (avatar, name, email), and JWT token storage in `localStorage`.
-  - Seamless login/logout flows with automatic redirection to previously attempted protected routes.
-- **`CartContext` (`src/context/CartContext.jsx`):**
-  - Handles adding items, removing items, updating quantity, and clearing cart.
-  - Automatic calculations: subtotal, promo code discounts (`SAVE10`), free shipping progress tracker, and 8% tax.
-  - Cart persistence across page reloads via `localStorage`.
-  - State controls for the slide-out quick Cart Drawer.
-- **`ToastContext` (`src/context/ToastContext.jsx`):**
-  - Floating toast notifications system for real-time feedback (item added, quantity adjusted, promo applied, login success/error, checkout confirmation).
-
-### 3. API Integration ([FakeStoreAPI](https://fakestoreapi.com))
-- **Products Catalog:** `GET https://fakestoreapi.com/products`
-  - Real-time client-side search by title/keywords with debouncing.
-  - Category filtering: `electronics`, `jewelery`, `men's clothing`, `women's clothing`.
-  - Sorting: Featured, Price (Low to High), Price (High to Low), Highest Rated.
-  - Clean skeleton loaders during data fetch.
-  - Robust offline fallback dataset if the public API experiences latency.
-- **Product Details:** `GET https://fakestoreapi.com/products/:id`
-  - High-res image display, star rating badge, category breadcrumbs, full description, quantity selector.
-  - "Add to Cart" and "Buy Now" express checkout.
-  - Related items section from the same category.
-- **Authentication:** `POST https://fakestoreapi.com/auth/login`
-  - Demo Credentials:
-    - **Username:** `mor_2314`
-    - **Password:** `83r5^_`
-  - One-click "Fill Demo Credentials" button for instant testing.
-
-### 4. Pages & Routing
-- `/` — Product Catalog / Home Page with hero banner, filters, and product grid.
-- `/product/:id` — Single Product Details Page.
-- `/cart` — Dedicated Shopping Cart Page with line items, quantity controls, and order summary.
-- `/login` — Centered login card with validation, demo auto-fill, and error messaging.
-- `/checkout` — **Protected Route** (redirects unauthenticated users to login, returns upon success) with shipping address form, test credit card payment, and order confirmation modal.
-- `*` — 404 Not Found Page.
+A complete, production-grade E-Commerce Single Page Application (SPA) named **Roy.** built with **React 18+**, **Vite**, **Tailwind CSS**, **React Router DOM (v6+)**, and **Context API**.
 
 ---
 
-## 📂 Project Structure
+## 🌟 Highlights
+
+### 1. Minimalist & Authentic Retail Aesthetic
+- **Brand Identity:** **Roy.** — clean, high-contrast typography and subtle layout.
+- **Palette:**
+  - Background: Soft off-white (`#F8FAFC`)
+  - Cards & Surfaces: Pure white (`#FFFFFF`) with subtle borders (`border-slate-200`) and soft shadows (`shadow-sm`)
+  - Accent & Buttons: Slate Black / Deep Slate (`#0F172A` / `#1E293B`) with crisp white text
+  - Headings: Slate Black (`text-slate-900`)
+  - Body & Secondary: Slate Gray (`text-slate-600`)
+- **Zero Horizontal Overflow:** Mobile-first layout with smooth transitions and zero horizontal scrollbars (`overflow-x-hidden`).
+
+### 2. Authentication & Session Persistence (`AuthContext`)
+- **State:** `user`, `token`, `isAuthenticated`, `isLoading`.
+- **Session Persistence:** Complete session management with `localStorage` (`roy_token` and `roy_user`).
+- **Standard Login Form:** Clean email/username & password inputs (clean and empty by default, no dummy hints or template credentials).
+- **Graceful Error Handling:** Inline error banners and toast notifications for invalid attempts.
+- **Instant Logout:** Available in the header profile dropdown and user profile page; immediately purges `localStorage`, resets global state, and redirects to `/login`.
+- **Protected Routes:** Both `/checkout` and `/profile` are guarded by `<ProtectedRoute>`. Unauthenticated visitors are directed to `/login?redirect=...` and returned upon authentication.
+
+### 3. Shopping Cart & Checkout (`CartContext`)
+- **Global State:** Add items, remove items, adjust quantities (`+` / `-`), clear bag.
+- **Slide-out Cart Drawer & Full Cart Page:** Available from anywhere via the live navbar cart button (with live animated counter badge).
+- **Accurate Pricing:** Subtotal, standard/express free shipping progress, sales tax (8%), promo codes (`WELCOME10`), and grand total.
+- **Order Confirmation:** Multi-step delivery address form, test card payment simulation, and an order confirmation modal with generated Order ID (`ROY-XXXXXX`).
+
+---
+
+## 🧭 Routes & Architecture
 
 ```
-src/
-├── components/
-│   ├── cart/
-│   │   ├── CartDrawer.jsx        # Slide-out quick cart drawer
-│   │   ├── CartItem.jsx          # Reusable cart row component
-│   │   └── OrderSummary.jsx      # Subtotal, shipping, promo & total card
-│   ├── checkout/
-│   │   ├── AddressForm.jsx       # Shipping address input fields
-│   │   ├── PaymentForm.jsx       # Card payment simulation form
-│   │   └── OrderSuccessModal.jsx # Order confirmation modal
-│   ├── common/
-│   │   ├── Badge.jsx             # Category & Rating badges
-│   │   ├── Button.jsx            # Reusable button with variants & loading states
-│   │   ├── Input.jsx             # Accessible input with error & icon support
-│   │   ├── Modal.jsx             # Dialog overlay with backdrop blur
-│   │   ├── ScrollToTop.jsx       # Scroll restoration on route transitions
-│   │   └── Skeleton.jsx          # Shimmer skeleton loader
-│   ├── layout/
-│   │   ├── Footer.jsx            # Assurances & footer links
-│   │   └── Navbar.jsx            # Sticky header with cart badge & auth menu
-│   └── product/
-│       ├── ProductCard.jsx       # Clamped title, price, image & add-to-cart
-│       ├── ProductFilter.jsx     # Search bar, category pills & sort dropdown
-│       ├── ProductGrid.jsx       # Responsive grid with empty & error states
-│       └── ProductSkeleton.jsx   # Product card skeleton loader
-├── context/
-│   ├── AuthContext.jsx           # User authentication & token management
-│   ├── CartContext.jsx           # Cart items, persistence, math & drawer state
-│   └── ToastContext.jsx          # Global toast notifications
-├── hooks/
-│   ├── useAuth.js                # Hook to consume AuthContext
-│   ├── useCart.js                # Hook to consume CartContext
-│   ├── useDebounce.js            # Debounce hook for smooth search queries
-│   └── useToast.js               # Hook to trigger toast notifications
-├── pages/
-│   ├── CartPage.jsx              # Full shopping cart page
-│   ├── CheckoutPage.jsx          # Protected checkout page
-│   ├── HomePage.jsx              # Product catalog & home page
-│   ├── LoginPage.jsx             # Login page with demo credentials
-│   ├── NotFoundPage.jsx          # 404 page
-│   └── ProductDetailPage.jsx     # Product details & related items
-├── routes/
-│   ├── AppRoutes.jsx             # React Router route definitions
-│   └── ProtectedRoute.jsx        # Authentication route guard
-├── services/
-│   └── api.js                    # FakeStoreAPI service layer & fallbacks
-├── App.jsx                       # Root component with Providers & Layout
-├── index.css                     # Tailwind CSS & custom design tokens
-└── main.jsx                      # React 18+ root mount
+/               -> Product Catalog with Live Search & Category Filter Pills
+/product/:id    -> Single Product Details with Image Zoom, Breadcrumbs & Star Ratings
+/cart           -> Shopping Bag Page with Line Items & Order Summary
+/login          -> Clean Authentication Card
+/checkout       -> Protected Delivery Address & Payment Screen (Auth Required)
+/profile        -> Protected Account & Order History Screen (Auth Required)
+*               -> 404 Not Found Screen
 ```
 
 ---
 
 ## 🛠️ Getting Started
 
-### 1. Install Dependencies
 ```bash
+# 1. Install dependencies
 npm install
-```
 
-### 2. Start Development Server
-```bash
+# 2. Run local development server
 npm run dev
-```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Build for Production
-```bash
+# 3. Build for production
 npm run build
 ```
-Generates production-optimized bundle in the `dist/` directory.
+Local dev server runs at: `http://localhost:5173`

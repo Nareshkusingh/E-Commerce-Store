@@ -4,20 +4,28 @@ import { getProducts, getCategories } from '../services/api';
 import ProductGrid from '../components/product/ProductGrid';
 import ProductFilter from '../components/product/ProductFilter';
 import useDebounce from '../hooks/useDebounce';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || 'all';
+  const urlSearchParam = searchParams.get('search') || '';
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(urlSearchParam);
   const debouncedSearch = useDebounce(searchQuery, 250);
   const [sortBy, setSortBy] = useState('default');
+
+  // Sync internal state if url search changes
+  useEffect(() => {
+    if (urlSearchParam !== searchQuery) {
+      setSearchQuery(urlSearchParam);
+    }
+  }, [urlSearchParam]);
 
   // Load categories once
   useEffect(() => {
@@ -53,19 +61,30 @@ export default function HomePage() {
 
   // Handle Category Filter change
   const handleCategoryChange = (cat) => {
+    const params = new URLSearchParams(searchParams);
     if (cat === 'all') {
-      searchParams.delete('category');
-      setSearchParams(searchParams);
+      params.delete('category');
     } else {
-      setSearchParams({ category: cat });
+      params.set('category', cat);
     }
+    setSearchParams(params);
+  };
+
+  const handleSearchChange = (val) => {
+    setSearchQuery(val);
+    const params = new URLSearchParams(searchParams);
+    if (val.trim()) {
+      params.set('search', val.trim());
+    } else {
+      params.delete('search');
+    }
+    setSearchParams(params);
   };
 
   const handleResetFilters = () => {
     setSearchQuery('');
     setSortBy('default');
-    searchParams.delete('category');
-    setSearchParams(searchParams);
+    setSearchParams({});
   };
 
   // Filter & Sort Products
@@ -78,7 +97,8 @@ export default function HomePage() {
       result = result.filter(
         (p) =>
           p.title.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query)
+          p.description.toLowerCase().includes(query) ||
+          p.category.toLowerCase().includes(query)
       );
     }
 
@@ -96,22 +116,17 @@ export default function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Hero Announcement */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white p-8 sm:p-12 mb-10 overflow-hidden shadow-soft-lg">
-        {/* Background glow circle */}
-        <div className="absolute -right-16 -top-16 w-80 h-80 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute right-1/3 -bottom-16 w-60 h-60 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="relative max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-primary-light text-xs font-semibold tracking-wide border border-white/10">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Spring / Summer 2026 Collection</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-            Minimalist Essentials for Modern Living.
+      {/* Sleek Retail Editorial Banner */}
+      <div className="relative rounded-2xl bg-slate-900 text-white p-8 sm:p-12 md:p-14 mb-10 overflow-hidden shadow-sm">
+        <div className="relative max-w-2xl space-y-3 z-10">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-widest text-slate-300">
+            Curated Essentials
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight font-sans">
+            Refined Living. Enduring Design.
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl">
-            Explore curated electronics, premium jewelry, and refined apparel. High aesthetics, honest pricing, and instant checkout.
+          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-lg">
+            Discover tailored wardrobe pieces, fine accessories, and everyday technical essentials designed for contemporary utility.
           </p>
         </div>
       </div>
@@ -119,7 +134,7 @@ export default function HomePage() {
       {/* Product Filter & Controls */}
       <ProductFilter
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         selectedCategory={categoryParam}
         onCategoryChange={handleCategoryChange}
         categories={categories}

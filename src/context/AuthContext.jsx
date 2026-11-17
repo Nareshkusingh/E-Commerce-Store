@@ -3,35 +3,43 @@ import { loginUser } from '../services/api';
 
 const AuthContext = createContext(null);
 
-const TOKEN_KEY = 'aura_auth_token';
-const USER_KEY = 'aura_auth_user';
+const TOKEN_KEY = 'roy_token';
+const USER_KEY = 'roy_user';
 
 export function AuthProvider({ children }) {
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem(TOKEN_KEY) || null;
+    } catch {
+      return null;
+    }
+  });
+
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem(USER_KEY);
-      const savedToken = localStorage.getItem(TOKEN_KEY);
-      if (savedUser && savedToken) {
-        return JSON.parse(savedUser);
-      }
-    } catch (e) {
-      console.error('Failed reading auth from localStorage', e);
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
     }
-    return null;
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Sync token in localStorage
+  // Sync token and user in localStorage
   useEffect(() => {
-    if (user && user.token) {
-      localStorage.setItem(TOKEN_KEY, user.token);
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
+    try {
+      if (token && user) {
+        localStorage.setItem(TOKEN_KEY, token);
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+      } else {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+      }
+    } catch (e) {
+      console.error('Failed writing auth session to localStorage', e);
     }
-  }, [user]);
+  }, [token, user]);
 
   /**
    * Log in user using credentials
@@ -39,19 +47,24 @@ export function AuthProvider({ children }) {
   const login = async (username, password) => {
     setIsLoading(true);
     try {
-      const res = await loginUser(username.trim(), password.trim());
-      
-      // Construct user profile
+      const res = await loginUser(username, password);
+
+      const cleanName = username.trim();
+      const displayName = cleanName.includes('@')
+        ? cleanName.split('@')[0]
+        : cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+
       const userProfile = {
-        username: username.trim(),
-        name: username.trim() === 'mor_2314' ? 'Morrison David' : username.trim(),
-        email: username.trim() === 'mor_2314' ? 'morrison@example.com' : `${username.trim()}@example.com`,
-        token: res.token,
-        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(username.trim())}&backgroundColor=4f46e5&textColor=ffffff`,
+        username: cleanName,
+        displayName: displayName,
+        email: cleanName.includes('@') ? cleanName : `${cleanName.toLowerCase()}@example.com`,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(cleanName)}&backgroundColor=0f172a&textColor=ffffff`,
       };
 
+      setToken(res.token);
       setUser(userProfile);
-      return { success: true, user: userProfile };
+
+      return { success: true, user: userProfile, token: res.token };
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -61,17 +74,23 @@ export function AuthProvider({ children }) {
   };
 
   /**
-   * Logout user and clear tokens
+   * Logout user and immediately clear session
    */
   const logout = () => {
+    setToken(null);
     setUser(null);
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    try {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    } catch (e) {
+      console.error('Error clearing auth storage', e);
+    }
   };
 
   const value = {
     user,
-    isAuthenticated: Boolean(user && user.token),
+    token,
+    isAuthenticated: Boolean(token && user),
     isLoading,
     login,
     logout,

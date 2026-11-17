@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 import { useToast } from './ToastContext';
 
 const CartContext = createContext(null);
-const CART_STORAGE_KEY = 'aura_cart_items';
-const PROMO_STORAGE_KEY = 'aura_applied_promo';
+const CART_STORAGE_KEY = 'roy_cart_items';
+const PROMO_STORAGE_KEY = 'roy_applied_promo';
 
 export function CartProvider({ children }) {
   const toast = useToast();
@@ -23,7 +23,7 @@ export function CartProvider({ children }) {
     return localStorage.getItem(PROMO_STORAGE_KEY) || '';
   });
   const [discountPercent, setDiscountPercent] = useState(() => {
-    return localStorage.getItem(PROMO_STORAGE_KEY) === 'SAVE10' ? 10 : 0;
+    return localStorage.getItem(PROMO_STORAGE_KEY) === 'WELCOME10' || localStorage.getItem(PROMO_STORAGE_KEY) === 'SAVE10' ? 10 : 0;
   });
 
   // Save cart to localStorage
@@ -142,13 +142,13 @@ export function CartProvider({ children }) {
    */
   const applyPromo = (code) => {
     const formatted = code.trim().toUpperCase();
-    if (formatted === 'SAVE10') {
-      setPromoCode('SAVE10');
+    if (formatted === 'WELCOME10' || formatted === 'SAVE10') {
+      setPromoCode(formatted);
       setDiscountPercent(10);
-      toast.success('Promo applied! 10% discount added.');
+      toast.success('Promo applied: 10% discount added.');
       return { success: true, message: '10% discount applied!' };
     } else {
-      toast.error('Invalid promo code. Try SAVE10');
+      toast.error('Invalid promo code');
       return { success: false, message: 'Invalid promo code' };
     }
   };
